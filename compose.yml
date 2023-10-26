@@ -1,0 +1,148 @@
+version: "3"
+services:
+  shopping_service:
+    image: shopping_service
+    build:
+      context: ./shopping_service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./shopping_service:/app
+    depends_on:
+      - account_service
+      - catalog_service
+      - cart_service
+      - order_service
+      - analytics_service
+
+  account_service:
+    image: account_service
+    build:
+      context: ./account_service
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./account_service:/app
+    environment:
+      - MYSQL_HOST=account-db
+      - MYSQL_DATABASE=account_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+
+  analytics_service:
+    image: analytics_service
+    build:
+      context: ./analytics_service
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./analytics_service:/app
+    environment:
+      - CASSANDRA_HOST=cassandra-db
+      - CASSANDRA_PORT=9042
+    depends_on:
+      - account_service
+      - catalog_service
+      - cart_service
+      - order_service
+    networks:
+      - backend-network
+
+  catalog_service:
+    image: catalog_service
+    build:
+      context: ./catalog_service
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./catalog_service:/app
+    environment:
+      - MYSQL_HOST=catalog-db
+      - MYSQL_DATABASE=catalog_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+
+  cart_service:
+    image: cart_service
+    build:
+      context: ./cart_service
+    ports:
+      - "3004:3000"
+    volumes:
+      - ./cart_service:/app
+    environment:
+      - MYSQL_HOST=cart-db
+      - MYSQL_DATABASE=cart_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+
+  order_service:
+    image: order_service
+    build:
+      context: ./order_service
+    ports:
+      - "3005:3000"
+    volumes:
+      - ./order_service:/app
+    environment:
+      - MYSQL_HOST=order-db
+      - MYSQL_DATABASE=order_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+
+  account-db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql/account:/var/lib/mysql
+    ports:
+      - "3301:3306"
+    networks:
+      - backend-network
+
+  catalog-db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql/catalog:/var/lib/mysql
+    ports:
+      - "3302:3306"
+    networks:
+      - backend-network
+
+  cart-db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql/cart:/var/lib/mysql
+    ports:
+      - "3303:3306"
+    networks:
+      - backend-network
+
+  order-db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql/order:/var/lib/mysql
+    ports:
+      - "3304:3306"
+    networks:
+      - backend-network
+
+  cassandra-db:
+    image: cassandra:latest
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./cassandra:/var/lib/cassandra
+    # networks:
+    #   - backend-network
+networks:
+  backend-network:
+    driver: bridge
+# volumes: #implement
