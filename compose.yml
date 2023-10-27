@@ -1,9 +1,9 @@
 version: "3"
 services:
   shopping_service:
-    image: shopping_service
-    build:
-      context: ./shopping_service
+    image: mustek17/shopping_service
+    # build:
+    #   context: ./shopping_service
     ports:
       - "3000:3000"
     volumes:
@@ -16,9 +16,9 @@ services:
       - analytics_service
 
   account_service:
-    image: account_service
-    build:
-      context: ./account_service
+    image: mustek17/account_service
+    # build:
+    #   context: ./account_service
     ports:
       - "3001:3000"
     volumes:
@@ -30,9 +30,9 @@ services:
       - MYSQL_PASSWORD=password
 
   analytics_service:
-    image: analytics_service
-    build:
-      context: ./analytics_service
+    image: mustek17/analytics_service
+    # build:
+    #   context: ./analytics_service
     ports:
       - "3002:3000"
     volumes:
@@ -49,9 +49,9 @@ services:
       - backend-network
 
   catalog_service:
-    image: catalog_service
-    build:
-      context: ./catalog_service
+    image: mustek17/catalog_service
+    # build:
+    #   context: ./catalog_service
     ports:
       - "3003:3000"
     volumes:
@@ -63,9 +63,9 @@ services:
       - MYSQL_PASSWORD=password
 
   cart_service:
-    image: cart_service
-    build:
-      context: ./cart_service
+    image: mustek17/cart_service
+    # build:
+    #   context: ./cart_service
     ports:
       - "3004:3000"
     volumes:
@@ -77,9 +77,9 @@ services:
       - MYSQL_PASSWORD=password
 
   order_service:
-    image: order_service
-    build:
-      context: ./order_service
+    image: mustek17/order_service
+    # build:
+    #   context: ./order_service
     ports:
       - "3005:3000"
     volumes:
@@ -145,4 +145,3 @@ services:
 networks:
   backend-network:
     driver: bridge
-# volumes: #implement
